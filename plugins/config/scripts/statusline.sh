@@ -96,7 +96,7 @@ else
   fi
 fi
 
-# ── MCP/LSP from cache(缺失或空时自足:喂合成 JSON 调 services.sh 现算) ──
+# ── MCP/LSP from cache(缺失、空或过时时自足:喂合成 JSON 调 services.sh 现算) ──
 svc_cache="/tmp/claude-statusline-services-${session_id}.cache"
 mcp_names=""
 lsp_names=""
@@ -108,9 +108,18 @@ svc_body=""
 # 2) statusline 是 settings 命令非插件 hook,进程里没有 CLAUDE_PLUGIN_ROOT——
 #    自足道拿它当门闩 = 永不触发。插件根从脚本自身位置推(本脚本就在
 #    <插件根>/scripts/ 里,services.sh 是邻座,不依赖任何注入 env)
+# 3) 第九判例(t43,2026-11-20):**非空但过时**的缓存永不重算——新加 .mcp.json
+#    的 MCP 上不了屏,删缓存才活。触发条件加 TTL:缓存 mtime 超 60s 即重算
+#    (与 git 缓存同款机制;.mcp.json mtime 对比法不采用——多源
+#    settings/项目/插件面,追不全,TTL 一刀切稳)
 _script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 _plugin_root=$(dirname "$_script_dir")
-if { [ ! -f "$svc_cache" ] || [ "$svc_body" = "MCP:
+_svc_stale=1  # 默认:无缓存 = 要算
+if [ -f "$svc_cache" ]; then
+  _svc_age=$(( $(date +%s) - $(stat -c %Y "$svc_cache" 2>/dev/null || stat -f %m "$svc_cache" 2>/dev/null || echo 0) ))
+  [ "$_svc_age" -le 60 ] && _svc_stale=0
+fi
+if { [ "$_svc_stale" -eq 1 ] || [ "$svc_body" = "MCP:
 LSP:" ]; } && [ -f "$_plugin_root/scripts/services.sh" ]; then
   # cwd 传给 services.sh 当项目根线索(替代 hook 时代的 CLAUDE_PROJECT_DIR):
   # stdin JSON 里没有 workspace 时兜底进程 cwd
