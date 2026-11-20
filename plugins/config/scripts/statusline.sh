@@ -116,7 +116,13 @@ LSP:" ]; } && [ -f "$_plugin_root/scripts/services.sh" ]; then
   # stdin JSON 里没有 workspace 时兜底进程 cwd
   _proj=""
   _proj=$(printf '%s' "$input" | jq -r '.workspace.current_dir // .cwd // empty' 2>/dev/null | tr -d '\r')
-  printf '{"session_id":"%s","tool_name":"","cwd":"%s"}' "$session_id" "${_proj:-$(pwd)}" \
+  # 第七判例(hvperv-harness t43 实抓定谳,2026-11-20):合成 JSON 禁 printf 拼——
+  # 真实 stdin 的 cwd 是 Windows 反斜杠路径(D:\repos\...),printf '%s' 拼进 JSON
+  # 字符串后 \r \h 被 bash 吃成转义 → 非法 JSON → services.sh set -e 下 jq 炸退,
+  # 缓存永不成(与 jq -b 判例同族:Windows 反斜杠 + bash 字符串拼接)。
+  # 修法:jq -nc --arg 注入,值由 jq 自行 JSON 转义,零手拼。
+  jq -nc --arg sid "$session_id" --arg cwd "${_proj:-$(pwd)}" \
+    '{session_id: $sid, tool_name: "", cwd: $cwd}' \
     | bash "$_plugin_root/scripts/services.sh" >/dev/null 2>&1 || true
   [ -f "$svc_cache" ] && svc_body=$(cat "$svc_cache" 2>/dev/null | tr -d '\r')
 fi
