@@ -1,0 +1,4 @@
+# 分发脚本行尾锁 LF(第八判例,2026-11-20):Windows 开发机 autocrlf 把
+# *.sh 推成 CRLF,marketplace 分发到 Linux 机后 bash 读到 pipefail\r 报
+# "set: pipefail: invalid option name"(lan-ubuntu 实抓)。sh 一律 LF。
+*.sh text eol=lf
