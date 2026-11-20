@@ -1,6 +1,6 @@
 # harness-plugins — herdr 生态 harness 插件市场
 
-> 一句话定位:Claude Code 插件市场仓,接替 project-evo 的生态位。三插件:share(搬运四域)、context(对话历史)、herdr(官方 SKILL 收录)。原语命令 = [raystyle/agent-primitives](https://github.com/raystyle/agent-primitives)(uv 包 `agent-primitives`,五入口 files/streams/ctxs/ports/pipes)。
+> 一句话定位:Claude Code 插件市场仓,接替 project-evo 的生态位。七插件:share(搬运四域)、context(对话历史)、herdr(官方 SKILL 收录)、dev-fix / statusline / typescript-lsp / ty(开发环境面)。原语命令 = [raystyle/agent-primitives](https://github.com/raystyle/agent-primitives)(uv 包 `agent-primitives`,五入口 files/streams/ctxs/ports/pipes)。
 
 ## 安装
 
@@ -31,6 +31,10 @@
 | context | `ctxs` | 对话历史域:请求头行 / 单请求全链 / 跨请求全文检索 | 查历史对话、回溯细节、跨请求搜索时 |
 | herdr | `herdr-core` | hc 官方 SKILL:常驻终端跑程序与 agent、子代理委派、消息等待读屏 | 委派任务、编排 agent、跨机操作时 |
 | herdr | `herdr-app` | herdr-app 官方 SKILL:spaces/tabs/panes 显示与排布、mod/layout 开发 | 开空间分屏、驱动用户窗口、开发 mod 时 |
+| dev-fix | —(hook) | Windows Git Bash 编码/换行修复 + MSYS 路径保护 + venv 条件激活 + 自动 git add + 失败命令路径提示 | Windows 开发环境 |
+| statusline | —(hook) | 状态栏注入:模型/Context 条/时长、MCP、LSP、Git 分支目录、Cron | 状态栏 |
+| typescript-lsp | —(LSP) | TS/JS language server:go-to-definition、find-references、编辑后错误检查 | TS/JS 代码智能;需 `npm i -g typescript-language-server typescript` |
+| ty | —(LSP) | Astral ty:极速 Python type checker | Python 类型检查;需 `uv tool install ty` |
 
 ## 环境前提
 
@@ -42,10 +46,16 @@
 ## 结构
 
 ```text
-.claude-plugin/marketplace.json   市场清单(三插件)
+.claude-plugin/marketplace.json   市场清单(七插件)
 plugins/share/skills/             files / streams / pipes / ports
 plugins/context/skills/           ctxs
 plugins/herdr/skills/             herdr-core / herdr-app(官方原文)
+plugins/dev-fix/scripts/          bash-fix / git-add / error-fix-hint(hook)
+plugins/statusline/scripts/       setup / services / statusline(hook)
+plugins/typescript-lsp/           LSP manifest(typescript-language-server)
+plugins/ty/                       LSP manifest(ty server)
 ```
+
+dev-fix / statusline 为本仓自主实现(2026-11-20;设计蓝本 = 同作者前作 raystyle/claude-plugins,功能面等价,本仓维护上游不回写);typescript-lsp 配置面等同 anthropics/claude-plugins-official 同名插件;ty 配置面等同 andres-ortizl/ty-lsp-claude-code-plugin(Astral ty 的 LSP 挂载)。
 
 skill 均为薄壳:动词面 + 判读 + 示例,真源在 agent-primitives 仓(`--llms` 手册单源)。改动词面 = 先改 agent-primitives 再同步此仓 skill。

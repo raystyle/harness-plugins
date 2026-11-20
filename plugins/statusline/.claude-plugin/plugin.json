@@ -1,0 +1,42 @@
+{
+  "name": "statusline",
+  "version": "0.1.0",
+  "description": "StatusLine Hook:自动注入状态栏配置,五行显示——模型/Context 条/时长、MCP 服务、LSP 服务、Git 分支与目录、Cron 任务",
+  "author": {
+    "name": "raystyle"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/raystyle/harness-plugins/tree/main/plugins/statusline",
+  "repository": "https://github.com/raystyle/harness-plugins",
+  "keywords": ["statusline", "status", "hook"],
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/setup.sh",
+            "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/services.sh",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "mcp__*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/services.sh",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}
