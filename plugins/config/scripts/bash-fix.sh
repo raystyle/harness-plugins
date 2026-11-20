@@ -11,8 +11,14 @@ set -euo pipefail
 # ── Fix Windows Git Bash \r line endings ──
 input=$(cat | tr -d '\r')
 
+# jq 一律 -b(Windows 原生 jq 文本模式把 \n 翻成 \r\n,-r 抽值时 \r 落进值内部:
+# jqlang/jq#1854;2026-11-20 本机实证,单行尾带 \r、多行内部夹 \r)。
+# -b = binary mode stdout,零翻译;后面 tr -d '\r' 是对旧版 jq 无 -b 的兜底。
+JQ="jq -b"
+command -v jq >/dev/null 2>&1 || JQ="jq"
+
 # Use jq to safely parse JSON and extract command (handles all escape sequences)
-original_cmd=$(echo "$input" | jq -r '.tool_input.command // empty' 2>/dev/null) || true
+original_cmd=$($JQ -r '.tool_input.command // empty' <<<"$input" 2>/dev/null | tr -d '\r') || true
 
 if [ -z "${original_cmd:-}" ]; then
   echo '{"continue":true}'
@@ -58,16 +64,16 @@ prefix=$(IFS='; '; echo "${prefix_parts[*]}")
 prefix="$prefix; "
 
 # Build modified command and output as JSON via jq
-# 输出自净(2026-11-20 真会话判例):Windows jq 输出 CRLF,且含中文命令的
-# updatedInput 在真会话触发过 "command contains control characters" schema 拒收
-# (干跑无法复现,环境差异在 Claude Code 调 hook 的 shell 层)。管道 tr -d '\r'
-# 两道保险:字符串面与 JSON 令牌间的 CR 全剥,harness 侧零控制符。
+# 输出自净(2026-11-20 真会话判例定案,根因 = jqlang/jq#1854 Windows 原生 jq
+# text-mode CRLF):抽取道已 -b + tr;本道再 tr 一次兜底旧版 jq。
 modified_cmd=$(printf '%s' "$prefix$original_cmd" | tr -d '\r')
 
-# 诊断日志(排查中,定案后撤):input/output 全量落盘,只写给本机
+# 诊断日志(根因已定案 2026-11-20:jq -r 在 Windows 原生 jq 下抽值夹 \r;
+# 保留 BASH_FIX_LOG 观察窗,稳定后撤)
 if [ -n "${BASH_FIX_LOG:-}" ]; then
   {
     printf '=== %s ===\n' "$(date -Iseconds)"
+    printf 'JQ_BIN=%s JQ_VERSION=%s\n' "$(command -v jq)" "$(jq --version 2>&1)"
     printf 'INPUT_JSON: %s\n' "$input"
     printf 'MODIFIED_REPR: '
     printf '%s' "$modified_cmd" | od -c | head -20
@@ -75,7 +81,7 @@ if [ -n "${BASH_FIX_LOG:-}" ]; then
   } >> "$BASH_FIX_LOG" 2>&1
 fi
 
-jq -n \
+$JQ -n \
   --arg cmd "$modified_cmd" \
   '{
     continue: true,
