@@ -48,9 +48,29 @@ if [ -f "$user_settings" ]; then
   config_servers=$(cat "$user_settings" | jq -r '.mcpServers // {} | keys[]' 2>/dev/null || echo "")
 fi
 
+# 项目根三线索:hook 注入的 CLAUDE_PROJECT_DIR > stdin cwd(statusline 自足道
+# 会传)> 进程 cwd。路径形可能是 Windows(D:/...)或 MSYS(/d/...),.mcp.json
+# 探测两种都试。另向上爬最多三级找 .mcp.json(工作树深处会话常见)。
 project_dir="${CLAUDE_PROJECT_DIR:-}"
-if [ -n "$project_dir" ] && [ -f "$project_dir/.mcp.json" ]; then
-  proj_servers=$(cat "$project_dir/.mcp.json" | jq -r '.mcpServers // {} | keys[]' 2>/dev/null || echo "")
+if [ -z "$project_dir" ]; then
+  project_dir=$(echo "$input" | jq -r '.cwd // .workspace.current_dir // empty' 2>/dev/null | tr -d '\r')
+fi
+if [ -z "$project_dir" ]; then
+  project_dir=$(pwd)
+fi
+proj_servers=""
+_pd="$project_dir"
+for _i in 1 2 3; do
+  _pd_unix=$(printf '%s' "$_pd" | sed 's|^\([A-Za-z]\):/|/\l\1/|')
+  for _cand in "$_pd" "$_pd_unix"; do
+    if [ -n "$_cand" ] && [ -f "$_cand/.mcp.json" ]; then
+      proj_servers=$(cat "$_cand/.mcp.json" | jq -r '.mcpServers // {} | keys[]' 2>/dev/null || echo "")
+      break 2
+    fi
+  done
+  _pd=$(dirname "$_pd")
+done
+if [ -n "$proj_servers" ]; then
   config_servers=$(printf '%s\n%s' "$config_servers" "$proj_servers" | sed '/^$/d')
 fi
 

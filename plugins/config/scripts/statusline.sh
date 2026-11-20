@@ -102,12 +102,22 @@ mcp_names=""
 lsp_names=""
 svc_body=""
 [ -f "$svc_cache" ] && svc_body=$(cat "$svc_cache" 2>/dev/null | tr -d '\r')
-# 2026-11-20 判例修正:只判「文件缺失」不够——hook 时代写下的空缓存永不刷新
-# (MCP:/LSP: 双空行),插件面修好后旧空缓存仍挡路。双空也算缺失,触发现算。
+
+# 2026-11-20 判例修正(hvperv-harness t43 实况定案):
+# 1) 只判「文件缺失」不够——hook 时代写空的缓存(MCP:/LSP: 双空行)永挡路;双空也触发重算
+# 2) statusline 是 settings 命令非插件 hook,进程里没有 CLAUDE_PLUGIN_ROOT——
+#    自足道拿它当门闩 = 永不触发。插件根从脚本自身位置推(本脚本就在
+#    <插件根>/scripts/ 里,services.sh 是邻座,不依赖任何注入 env)
+_script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+_plugin_root=$(dirname "$_script_dir")
 if { [ ! -f "$svc_cache" ] || [ "$svc_body" = "MCP:
-LSP:" ]; } && [ -n "${CLAUDE_PLUGIN_ROOT:-}" ]; then
-  printf '{"session_id":"%s","tool_name":""}' "$session_id" \
-    | bash "$CLAUDE_PLUGIN_ROOT/scripts/services.sh" >/dev/null 2>&1 || true
+LSP:" ]; } && [ -f "$_plugin_root/scripts/services.sh" ]; then
+  # cwd 传给 services.sh 当项目根线索(替代 hook 时代的 CLAUDE_PROJECT_DIR):
+  # stdin JSON 里没有 workspace 时兜底进程 cwd
+  _proj=""
+  _proj=$(printf '%s' "$input" | jq -r '.workspace.current_dir // .cwd // empty' 2>/dev/null | tr -d '\r')
+  printf '{"session_id":"%s","tool_name":"","cwd":"%s"}' "$session_id" "${_proj:-$(pwd)}" \
+    | bash "$_plugin_root/scripts/services.sh" >/dev/null 2>&1 || true
   [ -f "$svc_cache" ] && svc_body=$(cat "$svc_cache" 2>/dev/null | tr -d '\r')
 fi
 if [ -n "$svc_body" ]; then
