@@ -1,0 +1,12 @@
+{
+  "name": "share",
+  "version": "0.1.0",
+  "description": "搬运四域插件:files(文件)/ streams(持久流)/ pipes(实时字节)/ ports(端口映射)。薄壳 skill 指 agent-primitives 五入口 CLI(uv 包 agent-primitives),命令须在 PATH(files/streams/pipes/ports);旗标全集以 <命令> --llms 为准",
+  "author": {
+    "name": "raystyle"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/raystyle/harness-plugins/tree/main/plugins/share",
+  "repository": "https://github.com/raystyle/harness-plugins",
+  "keywords": ["agent", "primitives", "files", "streams", "pipes", "ports"]
+}

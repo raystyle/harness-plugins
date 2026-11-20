@@ -1,0 +1,33 @@
+{
+  "name": "harness-plugins",
+  "owner": {
+    "name": "raystyle"
+  },
+  "description": "herdr 生态 harness 插件市场:share(搬运四域 files/streams/pipes/ports)、context(对话历史 ctxs)、herdr(herdr-core/herdr-app 官方 SKILL 收录)。原语 CLI = raystyle/agent-primitives(uv 包 agent-primitives)",
+  "metadata": {
+    "description": "herdr 生态 harness 插件市场:share(搬运四域 files/streams/pipes/ports)、context(对话历史 ctxs)、herdr(herdr-core/herdr-app 官方 SKILL 收录)。原语 CLI = raystyle/agent-primitives(uv 包 agent-primitives)"
+  },
+  "plugins": [
+    {
+      "name": "share",
+      "source": "./plugins/share",
+      "description": "搬运四域插件:files(文件)/ streams(持久流)/ pipes(实时字节)/ ports(端口映射),薄壳 skill 指 agent-primitives 五入口 CLI",
+      "version": "0.1.0",
+      "category": "productivity"
+    },
+    {
+      "name": "context",
+      "source": "./plugins/context",
+      "description": "对话历史域插件:ctxs 查已结束的请求与历史对话(ClickHouse gw_logs 全链检索)",
+      "version": "0.1.0",
+      "category": "productivity"
+    },
+    {
+      "name": "herdr",
+      "source": "./plugins/herdr",
+      "description": "herdr 官方 SKILL 收录:herdr-core(hc 终端编排)与 herdr-app(窗口面),官方原文逐字",
+      "version": "0.1.0",
+      "category": "productivity"
+    }
+  ]
+}

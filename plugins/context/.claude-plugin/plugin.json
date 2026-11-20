@@ -1,0 +1,12 @@
+{
+  "name": "context",
+  "version": "0.1.0",
+  "description": "对话历史域插件:ctxs(查已结束的请求与历史对话,ClickHouse gw_logs 全链检索)。薄壳 skill 指 agent-primitives 五入口 CLI(uv 包 agent-primitives),命令须在 PATH(ctxs);旗标全集以 ctxs --llms 为准",
+  "author": {
+    "name": "raystyle"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/raystyle/harness-plugins/tree/main/plugins/context",
+  "repository": "https://github.com/raystyle/harness-plugins",
+  "keywords": ["agent", "context", "history", "search"]
+}
