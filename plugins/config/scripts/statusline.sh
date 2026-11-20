@@ -96,18 +96,23 @@ else
   fi
 fi
 
-# ── MCP/LSP from cache(缺失时自足:喂合成 JSON 调 services.sh 现算) ──
+# ── MCP/LSP from cache(缺失或空时自足:喂合成 JSON 调 services.sh 现算) ──
 svc_cache="/tmp/claude-statusline-services-${session_id}.cache"
 mcp_names=""
 lsp_names=""
-if [ ! -f "$svc_cache" ] && [ -n "${CLAUDE_PLUGIN_ROOT:-}" ]; then
-  # 首次渲染无 hook 预热:自己跑一遍服务收集(静默失败,渲染不因它断)
+svc_body=""
+[ -f "$svc_cache" ] && svc_body=$(cat "$svc_cache" 2>/dev/null | tr -d '\r')
+# 2026-11-20 判例修正:只判「文件缺失」不够——hook 时代写下的空缓存永不刷新
+# (MCP:/LSP: 双空行),插件面修好后旧空缓存仍挡路。双空也算缺失,触发现算。
+if { [ ! -f "$svc_cache" ] || [ "$svc_body" = "MCP:
+LSP:" ]; } && [ -n "${CLAUDE_PLUGIN_ROOT:-}" ]; then
   printf '{"session_id":"%s","tool_name":""}' "$session_id" \
     | bash "$CLAUDE_PLUGIN_ROOT/scripts/services.sh" >/dev/null 2>&1 || true
+  [ -f "$svc_cache" ] && svc_body=$(cat "$svc_cache" 2>/dev/null | tr -d '\r')
 fi
-if [ -f "$svc_cache" ]; then
-  mcp_names=$(grep "^MCP:" "$svc_cache" 2>/dev/null | sed 's/^MCP://' | tr -d '\r' || echo "")
-  lsp_names=$(grep "^LSP:" "$svc_cache" 2>/dev/null | sed 's/^LSP://' | tr -d '\r' || echo "")
+if [ -n "$svc_body" ]; then
+  mcp_names=$(printf '%s\n' "$svc_body" | grep "^MCP:" | sed 's/^MCP://' | tr -d '\r' || echo "")
+  lsp_names=$(printf '%s\n' "$svc_body" | grep "^LSP:" | sed 's/^LSP://' | tr -d '\r' || echo "")
 fi
 
 sep=" ${C_KEY}│${R} "
