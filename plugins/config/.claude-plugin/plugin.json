@@ -1,6 +1,6 @@
 {
   "name": "config",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "开发环境面合一插件:dev-fix(Windows Git Bash 编码/换行/MSYS 路径 hook + venv 条件激活 + 自动 git add + 失败命令路径提示)+ statusline(状态栏五行:模型/Context/MCP/LSP/Git/Cron)+ typescript-lsp(TS/JS)+ ty(Astral Python type checker)两个 LSP。原四插件归并于 config(2026-11-20)",
   "author": {
     "name": "raystyle"
@@ -8,7 +8,14 @@
   "license": "MIT",
   "homepage": "https://github.com/raystyle/harness-plugins/tree/main/plugins/config",
   "repository": "https://github.com/raystyle/harness-plugins",
-  "keywords": ["config", "hook", "statusline", "lsp", "typescript", "python"],
+  "keywords": [
+    "config",
+    "hook",
+    "statusline",
+    "lsp",
+    "typescript",
+    "python"
+  ],
   "hooks": {
     "PreToolUse": [
       {
@@ -49,7 +56,9 @@
   "lspServers": {
     "typescript": {
       "command": "typescript-language-server",
-      "args": ["--stdio"],
+      "args": [
+        "--stdio"
+      ],
       "extensionToLanguage": {
         ".ts": "typescript",
         ".tsx": "typescriptreact",
@@ -63,7 +72,9 @@
     },
     "python-lsp": {
       "command": "ty",
-      "args": ["server"],
+      "args": [
+        "server"
+      ],
       "transport": "stdio",
       "extensionToLanguage": {
         ".py": "python",
