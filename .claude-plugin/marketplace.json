@@ -3,9 +3,9 @@
   "owner": {
     "name": "raystyle"
   },
-  "description": "herdr 生态 harness 插件市场:share(搬运四域 files/streams/pipes/ports)、context(对话历史 ctxs)、herdr(herdr-core/herdr-app 官方 SKILL 收录)、dev-fix/statusline/typescript-lsp/ty(开发环境面)。原语 CLI = raystyle/agent-primitives(uv 包 agent-primitives)",
+  "description": "herdr 生态 harness 插件市场:share(搬运四域 files/streams/pipes/ports)、context(对话历史 ctxs)、herdr(herdr-core/herdr-app 官方 SKILL 收录)、config(dev-fix/statusline/typescript-lsp/ty 四合一)。原语 CLI = raystyle/agent-primitives(uv 包 agent-primitives)",
   "metadata": {
-    "description": "herdr 生态 harness 插件市场:share(搬运四域 files/streams/pipes/ports)、context(对话历史 ctxs)、herdr(herdr-core/herdr-app 官方 SKILL 收录)、dev-fix/statusline/typescript-lsp/ty(开发环境面)。原语 CLI = raystyle/agent-primitives(uv 包 agent-primitives)"
+    "description": "herdr 生态 harness 插件市场:share(搬运四域 files/streams/pipes/ports)、context(对话历史 ctxs)、herdr(herdr-core/herdr-app 官方 SKILL 收录)、config(dev-fix/statusline/typescript-lsp/ty 四合一)。原语 CLI = raystyle/agent-primitives(uv 包 agent-primitives)"
   },
   "plugins": [
     {
@@ -30,30 +30,9 @@
       "category": "productivity"
     },
     {
-      "name": "dev-fix",
-      "source": "./plugins/dev-fix",
-      "description": "开发辅助 Hook:Windows Git Bash 编码/换行修复 + MSYS 路径保护 + Python venv 条件激活 + 写完自动 git add",
-      "version": "0.1.0",
-      "category": "productivity"
-    },
-    {
-      "name": "statusline",
-      "source": "./plugins/statusline",
-      "description": "StatusLine Hook:自动注入状态栏配置,显示模型、Context、Git、目录、MCP/LSP 服务状态",
-      "version": "0.1.0",
-      "category": "productivity"
-    },
-    {
-      "name": "typescript-lsp",
-      "source": "./plugins/typescript-lsp",
-      "description": "TypeScript/JavaScript language server:go-to-definition、find-references、编辑后错误检查",
-      "version": "1.0.0",
-      "category": "productivity"
-    },
-    {
-      "name": "ty",
-      "source": "./plugins/ty",
-      "description": "ty:Astral 出的极速 Python type checker(LSP)",
+      "name": "config",
+      "source": "./plugins/config",
+      "description": "开发环境面合一:dev-fix hook(Windows Git Bash 编码/MSYS 路径/venv/自动 git add)+ statusline 状态栏 + typescript-lsp + ty 两 LSP",
       "version": "0.1.0",
       "category": "productivity"
     }

@@ -96,10 +96,15 @@ else
   fi
 fi
 
-# ── MCP/LSP from cache ──
+# ── MCP/LSP from cache(缺失时自足:喂合成 JSON 调 services.sh 现算) ──
 svc_cache="/tmp/claude-statusline-services-${session_id}.cache"
 mcp_names=""
 lsp_names=""
+if [ ! -f "$svc_cache" ] && [ -n "${CLAUDE_PLUGIN_ROOT:-}" ]; then
+  # 首次渲染无 hook 预热:自己跑一遍服务收集(静默失败,渲染不因它断)
+  printf '{"session_id":"%s","tool_name":""}' "$session_id" \
+    | bash "$CLAUDE_PLUGIN_ROOT/scripts/services.sh" >/dev/null 2>&1 || true
+fi
 if [ -f "$svc_cache" ]; then
   mcp_names=$(grep "^MCP:" "$svc_cache" 2>/dev/null | sed 's/^MCP://' | tr -d '\r' || echo "")
   lsp_names=$(grep "^LSP:" "$svc_cache" 2>/dev/null | sed 's/^LSP://' | tr -d '\r' || echo "")

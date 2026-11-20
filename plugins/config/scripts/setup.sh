@@ -1,15 +1,26 @@
 #!/usr/bin/env bash
 # harness-plugins 自主实现(2026-11-20);设计蓝本 = raystyle/claude-plugins statusline(同作者前作,功能面等价)
 # 本仓维护:改动在此仓做,上游不回写
-# Setup hook: inject/update statusLine config into user settings
+# 手动一次性安装(2026-11-20 裁定 statusline 不走 hook):把 statusLine 命令注入 ~/.claude/settings.json
+# 用法:bash <本脚本>(装/更新插件后重跑一次,命令路径自动跟到新版本缓存目录)
 # Always updates the command path so it tracks the current plugin version
 set -euo pipefail
 
 settings_file="$HOME/.claude/settings.json"
 plugin_root="${CLAUDE_PLUGIN_ROOT:-}"
 
+# 手动道(hook 不再注入 CLAUDE_PLUGIN_ROOT):从缓存目录解析本插件最新版本
 if [ -z "$plugin_root" ]; then
-  exit 0
+  cache_root="$HOME/.claude/plugins/cache/harness-plugins/config"
+  if [ -d "$cache_root" ]; then
+    latest=$(ls -1v "$cache_root" 2>/dev/null | tail -1)
+    [ -n "$latest" ] && plugin_root="$cache_root/$latest"
+  fi
+fi
+
+if [ -z "$plugin_root" ]; then
+  echo "setup: 未定位到插件根(装好 config@harness-plugins 后重跑本脚本)" >&2
+  exit 1
 fi
 
 script_path="$plugin_root/scripts/statusline.sh"
