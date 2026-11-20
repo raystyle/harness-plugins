@@ -58,7 +58,22 @@ prefix=$(IFS='; '; echo "${prefix_parts[*]}")
 prefix="$prefix; "
 
 # Build modified command and output as JSON via jq
-modified_cmd="$prefix$original_cmd"
+# 输出自净(2026-11-20 真会话判例):Windows jq 输出 CRLF,且含中文命令的
+# updatedInput 在真会话触发过 "command contains control characters" schema 拒收
+# (干跑无法复现,环境差异在 Claude Code 调 hook 的 shell 层)。管道 tr -d '\r'
+# 两道保险:字符串面与 JSON 令牌间的 CR 全剥,harness 侧零控制符。
+modified_cmd=$(printf '%s' "$prefix$original_cmd" | tr -d '\r')
+
+# 诊断日志(排查中,定案后撤):input/output 全量落盘,只写给本机
+if [ -n "${BASH_FIX_LOG:-}" ]; then
+  {
+    printf '=== %s ===\n' "$(date -Iseconds)"
+    printf 'INPUT_JSON: %s\n' "$input"
+    printf 'MODIFIED_REPR: '
+    printf '%s' "$modified_cmd" | od -c | head -20
+    printf 'ENV_LANG=%s ENV_LC_ALL=%s\n' "${LANG:-}" "${LC_ALL:-}"
+  } >> "$BASH_FIX_LOG" 2>&1
+fi
 
 jq -n \
   --arg cmd "$modified_cmd" \
@@ -69,4 +84,4 @@ jq -n \
       permissionDecision: "allow",
       updatedInput: { command: $cmd }
     }
-  }'
+  }' | tr -d '\r'
