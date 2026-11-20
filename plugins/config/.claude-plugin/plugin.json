@@ -61,7 +61,7 @@
         ".cjs": "javascript"
       }
     },
-    "python": {
+    "python-lsp": {
       "command": "ty",
       "args": ["server"],
       "transport": "stdio",
