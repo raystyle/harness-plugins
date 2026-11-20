@@ -53,8 +53,11 @@ plugins/config(LSP manifest)      typescript-language-server + ty server
 ```
 
 statusline 不走 hook(2026-11-20 裁定):装好后手动跑一次
-`bash ~/.claude/plugins/cache/harness-plugins/config/<版本>/scripts/setup.sh`
-把 statusLine 命令注入 `~/.claude/settings.json`;状态栏渲染时自足补算 MCP/LSP 缓存。
+`bash ~/.claude/plugins/cache/harness-plugins/config/<最新版本>/scripts/setup.sh`(或在仓根 `CLAUDE_PLUGIN_ROOT` 指插件目录跑)。
+setup 部署**稳定入口** `~/.config/harness-plugins/statusline-entry.sh` 并把
+`statusLine.command` 指向它——入口不含版本号,**升版免改 settings**(t43 会诊判例:
+0.1.3→0.1.4 时 settings 钉旧版本路径,每台机器都得手改)。入口每次渲染自选
+最新版本目录转发;状态栏渲染自足补算 MCP/LSP 缓存(零 env 依赖,0.1.5 起)。
 
 config 插件为本仓自主实现(2026-11-20;hook 设计蓝本 = 同作者前作 raystyle/claude-plugins,功能面等价,本仓维护上游不回写);两 LSP 配置面等同 anthropics/claude-plugins-official(typescript-lsp)与 andres-ortizl/ty-lsp-claude-code-plugin(Astral ty)的挂载。原独立四插件(dev-fix/statusline/typescript-lsp/ty)已归并入 config。
 
