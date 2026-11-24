@@ -3,9 +3,9 @@
   "owner": {
     "name": "raystyle"
   },
-  "description": "herdr 生态 harness 插件市场:share(搬运四域 files/streams/pipes/ports)、context(对话历史 ctxs)、herdr(herdr-core/herdr-app 官方 SKILL 收录)、config(dev-fix/statusline/typescript-lsp/ty 四合一)。原语 CLI = raystyle/agent-primitives(uv 包 agent-primitives)",
+  "description": "herdr 生态 harness 插件市场:share(搬运四域 files/streams/pipes/ports)、context(对话历史 ctxs)、herdr(herdr-core/herdr-app 官方 SKILL 收录 + views-dev)、config(开发环境面合一:dev-fix hook + statusline + typescript-lsp/python-lsp)。原语 CLI = raystyle/agent-primitives(uv 包 agent-primitives)",
   "metadata": {
-    "description": "herdr 生态 harness 插件市场:share(搬运四域 files/streams/pipes/ports)、context(对话历史 ctxs)、herdr(herdr-core/herdr-app 官方 SKILL 收录)、config(dev-fix/statusline/typescript-lsp/ty 四合一)。原语 CLI = raystyle/agent-primitives(uv 包 agent-primitives)"
+    "description": "herdr 生态 harness 插件市场:share(搬运四域 files/streams/pipes/ports)、context(对话历史 ctxs)、herdr(herdr-core/herdr-app 官方 SKILL 收录 + views-dev)、config(开发环境面合一:dev-fix hook + statusline + typescript-lsp/python-lsp)。原语 CLI = raystyle/agent-primitives(uv 包 agent-primitives)"
   },
   "plugins": [
     {
@@ -25,8 +25,8 @@
     {
       "name": "herdr",
       "source": "./plugins/herdr",
-      "description": "herdr 官方 SKILL 收录:herdr-core(hc 终端编排)与 herdr-app(窗口面),官方原文逐字",
-      "version": "0.1.0",
+      "description": "herdr 官方 SKILL 收录:herdr-core(hc 终端编排)与 herdr-app(窗口面),官方原文逐字;另含 views-dev(views mod 开发与安装规范,可关闭的工作台 pane,配套检测/部署脚本)",
+      "version": "0.2.0",
       "category": "productivity"
     },
     {
@@ -34,13 +34,6 @@
       "source": "./plugins/config",
       "description": "开发环境面合一:dev-fix hook(Windows Git Bash 编码/MSYS 路径/venv/自动 git add)+ statusline 状态栏 + typescript-lsp + ty 两 LSP",
       "version": "0.2.0",
-      "category": "productivity"
-    },
-    {
-      "name": "views",
-      "source": "./plugins/views",
-      "description": "views mod 开发与安装规范(任意项目自持):命名防撞、数据道/视图道标准形、调试闭环;配套环境检测与安装部署 uv 脚本",
-      "version": "0.1.0",
       "category": "productivity"
     }
   ]

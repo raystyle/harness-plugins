@@ -1,12 +1,19 @@
 {
   "name": "herdr",
-  "version": "0.1.0",
-  "description": "herdr 官方 SKILL 收录:herdr-core(hc:常驻终端跑程序与 coding agent,子代理/消息/等待/读屏/跨机)与 herdr-app(桌面窗口:spaces/tabs/panes 显示与排布、mod 与 layout 开发)。两份 SKILL 均为官方原文逐字收录,运行时以 hc --skill / herdr-app --skill 拉最新手册为准",
+  "version": "0.2.0",
+  "description": "herdr 官方 SKILL 收录:herdr-core(hc:常驻终端跑程序与 coding agent,子代理/消息/等待/读屏/跨机)与 herdr-app(桌面窗口:spaces/tabs/panes 显示与排布、mod 与 layout 开发)。两份 SKILL 均为官方原文逐字收录,运行时以 hc --skill / herdr-app --skill 拉最新手册为准。另含 views-dev:views mod(可关闭的工作台 pane)开发与安装规范,任意项目自持,配套环境检测与安装部署脚本",
   "author": {
     "name": "raystyle"
   },
   "license": "MIT",
   "homepage": "https://github.com/raystyle/harness-plugins/tree/main/plugins/herdr",
   "repository": "https://github.com/raystyle/harness-plugins",
-  "keywords": ["herdr", "herdr-core", "herdr-app", "hc", "terminal"]
+  "keywords": [
+    "herdr",
+    "herdr-core",
+    "herdr-app",
+    "hc",
+    "terminal",
+    "views"
+  ]
 }

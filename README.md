@@ -1,6 +1,6 @@
 # harness-plugins — herdr 生态 harness 插件市场
 
-> 一句话定位:Claude Code 插件市场仓,接替 project-evo 的生态位。四插件:share(搬运四域)、context(对话历史)、herdr(官方 SKILL 收录)、config(开发环境面合一:dev-fix + statusline + typescript-lsp + ty)。原语命令 = [raystyle/agent-primitives](https://github.com/raystyle/agent-primitives)(uv 包 `agent-primitives`,五入口 files/streams/ctxs/ports/pipes)。
+> 一句话定位:Claude Code 插件市场仓,接替 project-evo 的生态位。四插件:share(搬运四域)、context(对话历史)、herdr(官方 SKILL 收录 + views-dev)、config(开发环境面合一:dev-fix + statusline + typescript-lsp + ty)。原语命令 = [raystyle/agent-primitives](https://github.com/raystyle/agent-primitives)(uv 包 `agent-primitives`,五入口 files/streams/ctxs/ports/pipes)。
 
 ## 安装
 
@@ -9,6 +9,7 @@
 /plugin install share@harness-plugins
 /plugin install context@harness-plugins
 /plugin install herdr@harness-plugins
+/plugin install config@harness-plugins
 ```
 
 升级 = 刷新市场快照再逐插件 update(重启会话生效):
@@ -31,13 +32,14 @@
 | context | `ctxs` | 对话历史域:请求头行 / 单请求全链 / 跨请求全文检索 | 查历史对话、回溯细节、跨请求搜索时 |
 | herdr | `herdr-core` | hc 官方 SKILL:常驻终端跑程序与 agent、子代理委派、消息等待读屏 | 委派任务、编排 agent、跨机操作时 |
 | herdr | `herdr-app` | herdr-app 官方 SKILL:spaces/tabs/panes 显示与排布、mod/layout 开发 | 开空间分屏、驱动用户窗口、开发 mod 时 |
+| herdr | `views-dev` | views mod(可关闭的工作台 pane)开发与安装规范,任意项目自持:四条铁律、命名防撞、数据道/视图道标准形、调试闭环、安装卸载;配套 `views_check.py`(环境检测 + 心跳诊断)与 `views_sync.py`(装/卸/对照) | 任何项目要开发、安装或排查自己的 views mod 时 |
 | config | —(hook+LSP) | 开发环境面合一:dev-fix hook(Windows Git Bash 编码/MSYS 路径/venv 条件激活/自动 git add)+ statusline 状态栏(手动 setup 注入)+ typescript-lsp + ty 两 LSP | Windows 开发环境、状态栏、TS/JS 与 Python 代码智能 |
 
 ## 环境前提
 
 - share/context 的命令须在 PATH(安装:`uv tool install git+https://github.com/raystyle/agent-primitives.git`,五命令 files/streams/ctxs/ports/pipes)
 - 引擎依赖按域:files/streams 骑 s5,pipes/ports 骑 tailcat,ctxs 骑 ClickHouse(凭据 `CTX_URL/CTX_USER/CTX_PASSWORD`);缺位时 structured error 指路
-- herdr 插件两份 SKILL 为官方原文逐字收录;运行时手册以 `hc --skill` / `herdr-app --skill` 为准(skill 只是路由面)
+- herdr 插件的 herdr-core / herdr-app 两份 SKILL 为官方原文逐字收录;运行时手册以 `hc --skill` / `herdr-app --skill` 为准(skill 只是路由面)。`views-dev` 为本仓自写,脚本需 Python ≥3.10(`uv run` 或 `python3`)
 - 客户端:Claude Code(插件市场面)
 
 ## 结构
@@ -46,7 +48,7 @@
 .claude-plugin/marketplace.json   市场清单(七插件)
 plugins/share/skills/             files / streams / pipes / ports
 plugins/context/skills/           ctxs
-plugins/herdr/skills/             herdr-core / herdr-app(官方原文)
+plugins/herdr/skills/             herdr-core / herdr-app(官方原文)+ views-dev(自写,含检测/部署脚本)
 plugins/config/scripts/           bash-fix / git-add / error-fix-hint(hook)
                                   + setup(手动)/ services / statusline(状态栏)
 plugins/config(LSP manifest)      typescript-language-server + ty server
