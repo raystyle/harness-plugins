@@ -13,11 +13,12 @@ description: >-
 
 views mod = herdr-app 布局里挂载的数据面板(QuickJS + gpui-kit)。mod 安装位全局唯一(`~/.config/herdr-app/mods/`),跨项目共享——**本项目自持开发,装进全局位用**。
 
-## 三条铁律(真实事故换的)
+## 四条铁律(真实事故换的,违者直接返工)
 
 1. **mod 只渲染,不碰数据源**:数据采集/聚合在数据域 CLI(node dist 或 uv tool exe),mod 侧 `exec(绝对路径, [..., "--json"])`;exec 默认 30s 超时,长查询显式 `{timeout}`;herdr-app 进程 PATH 不含用户目录,程序与脚本路径一律绝对路径正斜杠
 2. **运行时状态绝不写 mod 源码目录**(本地开发目录或安装位都算):写 mods/ = 热重载死循环。观测 `setShared("<mod>.state", {ts, ...})`;排序/折叠/拖位 `setShared("<mod>.order")`;大产物 `~/.config/herdr-app/data/<mod>/`
 3. **layout 是 space 级持久,switch 作用于当前焦点 space**:调试一律在自己 space;交付后永不主动 layout.switch(两次全屏事故的根因)
+4. **绝不动布局文件(`layouts/*.json`)——views mod 是可关闭的 pane,不是常驻布局块**(2026-11-24 双份事故定案):用户说「部署/生效/挂载」一律 = `views_sync.py install` + 用户自己 `pane.split --pane <目标> --mod <mod名>` 开窗(或你锚定代开,看完可 `pane.close`)。写进布局文件的 mod 块**没有窗格、关不掉**;pane.split 挂载也可能被 herdr-app 持久化回写布局文件(demo-views 判例)——**split 后重读布局文件确认没有把 mod 块写进去**,有则手工清掉并还原;布局文件坏了的还原点 = 持有它的项目仓
 
 ## 命名(防撞,全局位共享的代价)
 
