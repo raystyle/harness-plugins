@@ -93,14 +93,23 @@ herdr-app status                                         # errors 必空
 herdr-app shot /tmp/<mod>.png                            # 然后看图
 ```
 
-挂载查看:锚定 `pane.split --direction right --pane <目标 pane> --mod <mod名>`(全流程见 herdr-app 操作纪律;**不带 --pane 会开进用户正看的空间**),看完 `pane.close --pane <新id>`。check 只验无数据首帧——活数据行为要真挂载看屏;数据道心跳看 `~/.config/herdr-app/shared.json` 的 `<mod>.state.ts` 在走。
+挂载查看(调试与日常同一形态——**可关闭的工作台 pane**):锚定 `pane.split --direction right --pane <目标 pane> --mod <mod名>`(全流程见 herdr-app 操作纪律;**不带 --pane 会开进用户正看的空间**),看完 `pane.close --pane <新id>`。check 只验无数据首帧——活数据行为要真挂载看屏;数据道心跳看 `~/.config/herdr-app/shared.json` 的 `<mod>.state.ts` 在走。
 
 ## 安装与卸载(全局位)
 
-- 安装 = `bash views/sync.sh`(cp 到全局位,热重载即时生效;项目仓是源,全局位是产物)
+- 安装 = `uv run views_sync.py install`(项目仓是源,全局位是产物,热重载即时生效)
 - 同名冲突:全局位唯一——改自己名(加项目前缀),不覆盖别人的
-- 卸载 = `rm -rf ~/.config/herdr-app/mods/<mod名>` + 若在屏:锚定 `pane.close`(禁关空间最后一个 pane)
+- **卸载的内存实例判例**:herdr-app 已加载的 mod 在目录被删后,内存实例仍在——status 报 `mod <名>: no mod folder …` 直到重启 herdr-app。正确卸载三步:①先关掉屏上的 pane(锚定 `pane.close --pane <id>`;禁关空间最后一个 pane)②`views_sync.py uninstall <名>` ③若 status 仍报 no mod folder,重启 herdr-app 清实例
 - mod 想给命令:`<mod>.<命令>` 注册后在 herdr-app 命令面板可寻
+
+## 挂载模型:可关闭的工作台 pane
+
+views mod 的定位是**用户随手开关的工作台 pane**,不是常驻侧栏:
+
+- **不写进 ccoe-main.json 的常驻块**;用户需要时锚定 `pane.split --pane <目标pane> --mod <mod名>` 开一个窗格,看完 `pane.close` 关掉
+- 想要「一键开/关」体验:在项目里放一条说明/脚本包这两步(split 前按操作纪律走 `hc ls → hc get → view.json focused` 认目标 pane,不带 `--pane` 会开进用户正看的空间)
+- 模块自身**:focusable**(需要键盘输入的 mod 才在 mod.json 设 `"focusable": true`);默认 mod.json:`{"version": "0.1.0", "title": "<面板名>", "place": "none"}`
+- 关闭 pane 不结束任何终端(`pane.close` 只收 mod 窗格);数据道随 pane 关闭停止轮询
 
 ## 配套脚本(本 skill 目录,uv/python3 ≥3.10 零依赖)
 
