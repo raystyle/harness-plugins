@@ -101,19 +101,26 @@ if [ -n "$enabled_names" ]; then
   #    (marketplaces 兜底 + cache 主道),按版本号 ls -1v 取最新。
   # 2) 显示面 = manifest 里 mcpServers / lspServers 对象的**键名**(server 名),
   #    不是插件名——四合一插件(config 内含 typescript+python-lsp 两台 LSP)后
-  #    插件名不再等于服务名。jq 走 stdin(Windows jq 不认 MSYS 路径)。
+  # set -e 判例:grep -q 无命中退 1,`cmd && echo` 形在主管内会杀进程;双 if 显式判
+  # MCP 来源两道:manifest 的 mcpServers 键 + 插件根的 .mcp.json(2026-11-25 补,
+  # context 0.2.0 的 github server 就在 .mcp.json 里,原扫描看不见)
   emit_plugin_services() {
     local pf="$1"
     local pname
     pname=$(sed -n 's/.*"name"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' "$pf" | head -1)
     [ -n "$pname" ] || return 0
     echo "$pname" | grep -qx "$name_pattern" 2>/dev/null || return 0
-    # set -e 判例:grep -q 无命中退 1,`cmd && echo` 形在主管内会杀进程;双 if 显式判
     if grep -q '"mcpServers"' "$pf" 2>/dev/null; then
       cat "$pf" | jq -r '.mcpServers // {} | keys[]' 2>/dev/null | sed 's/^/mcp:/'
     fi
     if grep -q '"lspServers"' "$pf" 2>/dev/null; then
       cat "$pf" | jq -r '.lspServers // {} | keys[]' 2>/dev/null | sed 's/^/lsp:/'
+    fi
+    local root mcpjson
+    root=$(dirname "$(dirname "$pf")")
+    mcpjson="$root/.mcp.json"
+    if [ -f "$mcpjson" ]; then
+      cat "$mcpjson" | jq -r '.mcpServers // {} | keys[]' 2>/dev/null | sed 's/^/mcp:/'
     fi
   }
   plugin_services=$(
