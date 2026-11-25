@@ -18,8 +18,8 @@
     {
       "name": "context",
       "source": "./plugins/context",
-      "description": "上下文检索插件:ctxs skill(对话历史域检索)+ 自带只读 MCP server github(gh-mcp:搜公开仓库 / 搜公开代码 / 读公开仓库文件、目录与整棵树)",
-      "version": "0.2.1",
+      "description": "上下文检索插件:ctxs skill(对话历史域检索)+ 自带只读 MCP server gh-mcp(:搜公开仓库 / 搜公开代码 / 读公开仓库文件、目录与整棵树)",
+      "version": "0.2.2",
       "category": "productivity"
     },
     {

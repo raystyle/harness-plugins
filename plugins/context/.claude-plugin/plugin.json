@@ -1,7 +1,7 @@
 {
   "name": "context",
-  "version": "0.2.1",
-  "description": "上下文检索插件:ctxs skill(对话历史域,查已结束的请求与历史对话,ClickHouse gw_logs)+ 自带只读 MCP server github(gh-mcp:搜公开仓库、搜公开代码、读公开仓库的文件/目录/整棵树)。两个外部命令须在 PATH:ctxs(agent-primitives)与 gh-mcp(uv tool install git+https://github.com/raystyle/gh-mcp);GitHub token 走环境变量 GITHUB_PAT(可选,代码搜索必需)",
+  "version": "0.2.2",
+  "description": "上下文检索插件:ctxs skill(对话历史域,查已结束的请求与历史对话,ClickHouse gw_logs)+ 自带只读 MCP server gh-mcp(:搜公开仓库、搜公开代码、读公开仓库的文件/目录/整棵树)。两个外部命令须在 PATH:ctxs(agent-primitives)与 gh-mcp(uv tool install git+https://github.com/raystyle/gh-mcp);GitHub token 走环境变量 GITHUB_PAT(可选,代码搜索必需)",
   "author": {
     "name": "raystyle"
   },
