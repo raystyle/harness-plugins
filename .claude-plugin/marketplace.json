@@ -33,7 +33,7 @@
       "name": "config",
       "source": "./plugins/config",
       "description": "开发环境面合一:dev-fix hook(Windows Git Bash 编码/MSYS 路径/venv/自动 git add)+ statusline 状态栏 + typescript-lsp + ty 两 LSP",
-      "version": "0.2.0",
+      "version": "0.2.1",
       "category": "productivity"
     }
   ]

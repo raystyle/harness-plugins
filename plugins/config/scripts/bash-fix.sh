@@ -66,20 +66,8 @@ prefix="$prefix; "
 # Build modified command and output as JSON via jq
 # 输出自净(2026-11-20 真会话判例定案,根因 = jqlang/jq#1854 Windows 原生 jq
 # text-mode CRLF):抽取道已 -b + tr;本道再 tr 一次兜底旧版 jq。
+# 诊断日志面(BASH_FIX_LOG)已于 2026-11-25 撤——修复后零复发,观察期结束。
 modified_cmd=$(printf '%s' "$prefix$original_cmd" | tr -d '\r')
-
-# 诊断日志(根因已定案 2026-11-20:jq -r 在 Windows 原生 jq 下抽值夹 \r;
-# 保留 BASH_FIX_LOG 观察窗,稳定后撤)
-if [ -n "${BASH_FIX_LOG:-}" ]; then
-  {
-    printf '=== %s ===\n' "$(date -Iseconds)"
-    printf 'JQ_BIN=%s JQ_VERSION=%s\n' "$(command -v jq)" "$(jq --version 2>&1)"
-    printf 'INPUT_JSON: %s\n' "$input"
-    printf 'MODIFIED_REPR: '
-    printf '%s' "$modified_cmd" | od -c | head -20
-    printf 'ENV_LANG=%s ENV_LC_ALL=%s\n' "${LANG:-}" "${LC_ALL:-}"
-  } >> "$BASH_FIX_LOG" 2>&1
-fi
 
 $JQ -n \
   --arg cmd "$modified_cmd" \
