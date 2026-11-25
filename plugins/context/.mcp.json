@@ -1,7 +1,7 @@
 {
   "mcpServers": {
     "github": {
-      "command": "gh-search-mcp",
+      "command": "gh-mcp",
       "env": {
         "GITHUB_PAT": "${GITHUB_PAT:-}"
       }
