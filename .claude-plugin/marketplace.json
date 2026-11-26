@@ -3,9 +3,9 @@
   "owner": {
     "name": "raystyle"
   },
-  "description": "herdr 生态 harness 插件市场:share(搬运四域 files/streams/pipes/ports)、context(对话历史 ctxs + 只读 GitHub 检索 MCP(gh-mcp))、herdr(herdr-core/herdr-app 官方 SKILL 收录 + views-dev)、config(开发环境面合一:dev-fix hook + statusline + typescript-lsp/python-lsp)。原语 CLI = raystyle/agent-primitives(uv 包 agent-primitives)",
+  "description": "herdr 生态 harness 插件市场:share(搬运四域 files/streams/pipes/ports)、context(对话历史 ctxs + 只读 GitHub 检索 MCP gh-mcp,七工具)、herdr(herdr-core/herdr-app 官方 SKILL 收录 + views-dev)、config(开发环境面合一:dev-fix hook + statusline + typescript-lsp/python-lsp)。原语 CLI = raystyle/agent-primitives(uv 包 agent-primitives)",
   "metadata": {
-    "description": "herdr 生态 harness 插件市场:share(搬运四域 files/streams/pipes/ports)、context(对话历史 ctxs + 只读 GitHub 检索 MCP(gh-mcp))、herdr(herdr-core/herdr-app 官方 SKILL 收录 + views-dev)、config(开发环境面合一:dev-fix hook + statusline + typescript-lsp/python-lsp)。原语 CLI = raystyle/agent-primitives(uv 包 agent-primitives)"
+    "description": "herdr 生态 harness 插件市场:share(搬运四域 files/streams/pipes/ports)、context(对话历史 ctxs + 只读 GitHub 检索 MCP gh-mcp,七工具)、herdr(herdr-core/herdr-app 官方 SKILL 收录 + views-dev)、config(开发环境面合一:dev-fix hook + statusline + typescript-lsp/python-lsp)。原语 CLI = raystyle/agent-primitives(uv 包 agent-primitives)"
   },
   "plugins": [
     {
@@ -18,8 +18,8 @@
     {
       "name": "context",
       "source": "./plugins/context",
-      "description": "上下文检索插件:ctxs skill(对话历史域检索)+ 自带只读 MCP server gh-mcp(:搜公开仓库 / 搜公开代码 / 读公开仓库文件、目录与整棵树)",
-      "version": "0.2.2",
+      "description": "上下文检索插件:ctxs skill(对话历史域检索)+ 自带只读 MCP server gh-mcp(搜公开仓库/代码/issue/PR,读公开仓库文件、目录、整棵树,读单个 issue/PR)",
+      "version": "0.2.3",
       "category": "productivity"
     },
     {
